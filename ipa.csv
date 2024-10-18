@@ -1,0 +1,25 @@
+IPA,Voicing,Place,Centrality,Oro-nasal,Manner
+p,voiceless,bilabial,central,oral,stop
+b,voiced,bilabial,central,oral,stop
+t,voiceless,alveolar,central,oral,stop
+d,voiced,alveolar,central,oral,stop
+k,voiceless,velar,central,oral,stop
+g,voiced,velar,central,oral,stop
+f,voiceless,labio-dental,central,oral,fricative
+v,voiced,labio-dental,central,oral,fricative
+θ,voiceless,dental,central,oral,fricative
+ð,voiced,dental,central,oral,fricative
+s,voiceless,alveolar,central,oral,fricative
+z,voiced,alveolar,central,oral,fricative
+ʃ,voiceless,palato-alveolar,central,oral,fricative
+ʒ,voiced,palato-alveolar,central,oral,fricative
+tʃ,voiceless,palato-alveolar,central,oral,affricate
+dʒ,voiced,palato-alveolar,central,oral,affricate
+h,voiceless,glottal,central,oral,fricative
+m,voiced,bilabial,not applicable,nasal,stop
+n,voiced,alveolar,not applicable,nasal,stop
+ŋ,voiced,velar,not applicable,nasal,stop
+ɹ,voiced,alveolar,central,oral,approximant
+l,voiced,alveolar,lateral,oral,approximant
+j,voiced,palatal,central,oral,approximant
+w,voiced,labio-velar,central,oral,approximant
