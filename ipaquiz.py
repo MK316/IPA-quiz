@@ -57,6 +57,7 @@ if 'score' not in st.session_state:
     st.session_state.name = ""
     st.session_state.question = ""
     st.session_state.quiz_started = False
+    st.session_state.show_next = False  # New flag to handle showing next question
 
 # Get user name
 st.title("IPA Quiz")
@@ -78,7 +79,7 @@ if st.button("Start Quiz") and not st.session_state.quiz_started:
     else:
         st.error("Please enter your name to start the quiz.")
 
-# Display the question
+# Display the question if the quiz has started
 if st.session_state.quiz_started:
     st.subheader(st.session_state.question)
 
@@ -93,32 +94,34 @@ if st.session_state.quiz_started:
                 user_answer, st.session_state.current_answer, st.session_state.score, st.session_state.trials
             )
             st.success(result)
-
-            # Show next question and quit options
-            next_question = st.button("Show Next Symbol")
-            quit_and_show_score = st.button("Quit and Show Score")
+            st.session_state.show_next = True  # Allow showing the next question
             
-            if next_question:
-                try:
-                    question, answer, used_ipa_symbols = generate_question(st.session_state.used_ipa_symbols)
-                    st.session_state.current_answer = answer
-                    st.session_state.used_ipa_symbols = used_ipa_symbols
-                    st.session_state.question = question
-
-                    # Clear the answer input field for the next question
-                    st.experimental_set_query_params(clear="true")
-                except Exception as e:
-                    st.error(f"Error: {e}")
-
-            if quit_and_show_score:
-                st.success(f"Quiz ended. Well done, {st.session_state.name}! Your total score: {st.session_state.score}/{st.session_state.trials} points.")
-                # Reset the session state
-                st.session_state.score = 0
-                st.session_state.trials = 0
-                st.session_state.used_ipa_symbols = []
-                st.session_state.current_answer = ""
-                st.session_state.name = ""
-                st.session_state.question = ""
-                st.session_state.quiz_started = False
         else:
             st.error("Please enter an answer before submitting.")
+
+    # Show next question button only if a question was just answered
+    if st.session_state.show_next:
+        next_question = st.button("Show Next Symbol")
+        if next_question:
+            try:
+                question, answer, used_ipa_symbols = generate_question(st.session_state.used_ipa_symbols)
+                st.session_state.current_answer = answer
+                st.session_state.used_ipa_symbols = used_ipa_symbols
+                st.session_state.question = question
+                st.session_state.show_next = False  # Reset the flag
+                st.experimental_rerun()  # Refresh the page to display the next question
+            except Exception as e:
+                st.error(f"Error: {e}")
+
+    # Quit button
+    if st.button("Quit"):
+        st.success(f"Quiz ended. Well done, {st.session_state.name}! Your total score: {st.session_state.score}/{st.session_state.trials} points.")
+        # Reset the session state
+        st.session_state.score = 0
+        st.session_state.trials = 0
+        st.session_state.used_ipa_symbols = []
+        st.session_state.current_answer = ""
+        st.session_state.name = ""
+        st.session_state.question = ""
+        st.session_state.quiz_started = False
+        st.session_state.show_next = False
