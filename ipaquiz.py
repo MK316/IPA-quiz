@@ -35,12 +35,12 @@ def generate_question(used_ipa_symbols):
     used_ipa_symbols.append(current_ipa['IPA'])
     property_name = random.choice(available_properties)
     question = f"IPA Symbol: {current_ipa['IPA']}\nWhat is the {property_name.lower()} of this IPA symbol?"
-    answer = current_ipa[property_name].lower()
+    answer = str(current_ipa[property_name]).strip().lower()  # Ensure the answer is stripped and lowercased
     return question, answer, used_ipa_symbols
 
 # Check the answer and update the score and trials
 def quiz_function(user_answer, correct_answer, score, trials):
-    if user_answer.lower() == correct_answer:
+    if user_answer.strip().lower() == correct_answer:  # Case-insensitive and stripping spaces
         score += 1
         result = f"Correct! The answer was '{correct_answer}'."
     else:
@@ -65,10 +65,13 @@ if name:
 # Start quiz button
 if st.button("Start Quiz"):
     if name:
-        question, answer, used_ipa_symbols = generate_question(st.session_state.used_ipa_symbols)
-        st.session_state.current_answer = answer
-        st.session_state.used_ipa_symbols = used_ipa_symbols
-        st.session_state.question = question
+        try:
+            question, answer, used_ipa_symbols = generate_question(st.session_state.used_ipa_symbols)
+            st.session_state.current_answer = answer
+            st.session_state.used_ipa_symbols = used_ipa_symbols
+            st.session_state.question = question
+        except Exception as e:
+            st.error(f"Error: {e}")
     else:
         st.error("Please enter your name to start the quiz.")
 
@@ -88,10 +91,13 @@ if 'question' in st.session_state:
             st.success(result)
             
             # Generate new question after submission
-            question, answer, used_ipa_symbols = generate_question(st.session_state.used_ipa_symbols)
-            st.session_state.current_answer = answer
-            st.session_state.used_ipa_symbols = used_ipa_symbols
-            st.session_state.question = question
+            try:
+                question, answer, used_ipa_symbols = generate_question(st.session_state.used_ipa_symbols)
+                st.session_state.current_answer = answer
+                st.session_state.used_ipa_symbols = used_ipa_symbols
+                st.session_state.question = question
+            except Exception as e:
+                st.error(f"Error: {e}")
         else:
             st.error("Please enter an answer before submitting.")
 
