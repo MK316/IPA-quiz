@@ -55,6 +55,7 @@ if 'score' not in st.session_state:
     st.session_state.used_ipa_symbols = []
     st.session_state.current_answer = ""
     st.session_state.name = ""
+    st.session_state.question = ""
 
 # Get user name
 st.title("IPA Quiz")
@@ -76,7 +77,7 @@ if st.button("Start Quiz"):
         st.error("Please enter your name to start the quiz.")
 
 # Display the question
-if 'question' in st.session_state:
+if st.session_state.question:
     st.subheader(st.session_state.question)
 
     # User input for the answer
@@ -97,8 +98,9 @@ if 'question' in st.session_state:
                 st.session_state.current_answer = answer
                 st.session_state.used_ipa_symbols = used_ipa_symbols
                 st.session_state.question = question
-                # Display new question immediately
-                st.subheader(st.session_state.question)
+
+                # Clear the answer input field for the next question
+                st.experimental_set_query_params(clear="true")
             except Exception as e:
                 st.error(f"Error: {e}")
         else:
