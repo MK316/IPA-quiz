@@ -85,18 +85,20 @@ if 'question' in st.session_state:
     # Submit button
     if st.button("Submit"):
         if user_answer:
+            # Check the answer
             result, st.session_state.score, st.session_state.trials = quiz_function(
                 user_answer, st.session_state.current_answer, st.session_state.score, st.session_state.trials
             )
             st.success(result)
 
-            # Generate new question after submission
+            # Immediately show the next question after submission
             try:
                 question, answer, used_ipa_symbols = generate_question(st.session_state.used_ipa_symbols)
                 st.session_state.current_answer = answer
                 st.session_state.used_ipa_symbols = used_ipa_symbols
                 st.session_state.question = question
-                st.experimental_rerun()  # This triggers the rerun to display the new question
+                # Display new question immediately
+                st.subheader(st.session_state.question)
             except Exception as e:
                 st.error(f"Error: {e}")
         else:
