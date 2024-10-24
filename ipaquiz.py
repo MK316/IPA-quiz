@@ -80,7 +80,7 @@ if 'question' in st.session_state:
     st.subheader(st.session_state.question)
 
     # User input for the answer
-    user_answer = st.text_input("Your Answer")
+    user_answer = st.text_input("Your Answer", key="user_answer")
 
     # Submit button
     if st.button("Submit"):
@@ -89,13 +89,14 @@ if 'question' in st.session_state:
                 user_answer, st.session_state.current_answer, st.session_state.score, st.session_state.trials
             )
             st.success(result)
-            
+
             # Generate new question after submission
             try:
                 question, answer, used_ipa_symbols = generate_question(st.session_state.used_ipa_symbols)
                 st.session_state.current_answer = answer
                 st.session_state.used_ipa_symbols = used_ipa_symbols
                 st.session_state.question = question
+                st.experimental_rerun()  # This triggers the rerun to display the new question
             except Exception as e:
                 st.error(f"Error: {e}")
         else:
@@ -111,3 +112,4 @@ if st.button("Quit"):
         st.session_state.used_ipa_symbols = []
         st.session_state.current_answer = ""
         st.session_state.name = ""
+        st.session_state.question = ""
