@@ -80,6 +80,24 @@ if st.button("Start Quiz") and not st.session_state.quiz_started:
 # Add a horizontal line between 'Start Quiz' and 'Show an IPA'
 st.markdown("<hr>", unsafe_allow_html=True)
 
+# Create a row with the user name textbox and the Start Quiz button
+col1, col2 = st.columns([2, 1])  # Adjust the ratio for layout balance
+with col1:
+    name = st.text_input("Enter your name", st.session_state.name)
+with col2:
+    if st.button("Start Quiz") and not st.session_state.quiz_started:
+        if name:
+            st.session_state.quiz_started = True
+            st.session_state.score = 0
+            st.session_state.trials = 0
+            st.session_state.used_ipa_symbols = []
+            st.success(f"Hello {name}, let's begin!")
+        else:
+            st.error("Please enter your name to start the quiz.")
+
+# Add a horizontal line between 'Start Quiz' and 'Show an IPA'
+st.markdown("<hr>", unsafe_allow_html=True)
+
 # Always show the "Show an IPA" button once the quiz has started
 if st.session_state.quiz_started:
     if st.button("Show an IPA"):
@@ -90,21 +108,28 @@ if st.session_state.quiz_started:
         st.session_state.question = question
         st.session_state.show_next = True
 
-# Display the question and allow the user to answer
-if st.session_state.show_next:
-    st.subheader(st.session_state.question)
+    if st.session_state.show_next:
+        st.subheader(st.session_state.question)
 
-    # User input for the answer
-    user_answer = st.text_input("Your Answer", key="answer_input")
-
-    # Display Submit button
-    if st.button("Submit Answer"):
-        if user_answer:
-            # Check the answer
-            result, st.session_state.score, st.session_state.trials = quiz_function(
-                user_answer, st.session_state.current_answer, st.session_state.score, st.session_state.trials
-            )
-            st.success(result)
-            st.session_state.show_next = False  # Reset to allow showing a new IPA
-        else:
-            st.error("Please enter an answer before submitting.")
+        # Create a row with the answer input and the Submit button
+        col3, col4 = st.columns([2, 1])  # Adjust the ratio for layout balance
+        with col3:
+            user_answer = st.text_input("Your Answer", key="user_answer_input")
+        with col4:
+            if st.button("Submit"):
+                if user_answer:
+                    result, st.session_state.score, st.session_state.trials = quiz_function(
+                        user_answer, st.session_state.current_answer, st.session_state.score, st.session_state.trials
+                    )
+                    st.success(result)
+                    
+                    # Generate new question after submission
+                    question, answer, used_ipa_symbols = generate_question(st.session_state.used_ipa_symbols)
+                    st.session_state.current_answer = answer
+                    st.session_state.used_ipa_symbols = used_ipa_symbols
+                    st.session_state.question = question
+                else:
+                    st.error("Please enter an answer before submitting.")
+        
+        # Display the current score and trial count
+        st.write(f"Score: {st.session_state.score}/{st.session_state.trials}")
