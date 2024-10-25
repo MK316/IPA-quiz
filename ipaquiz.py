@@ -109,7 +109,8 @@ if st.session_state.quiz_started:
                 st.session_state.used_ipa_symbols = used_ipa_symbols
                 st.session_state.question = question
                 st.session_state.show_next = False  # Reset the flag
-                st.experimental_rerun()  # Refresh the page to display the next question
+                # Clear the user answer field by resetting key
+                st.session_state['user_answer'] = ""  # Clear user input field for the next question
             except Exception as e:
                 st.error(f"Error: {e}")
 
