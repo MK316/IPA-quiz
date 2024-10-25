@@ -58,11 +58,12 @@ if 'score' not in st.session_state:
     st.session_state.quiz_started = False
     st.session_state.show_next = False
 
-# Create a row with the user name textbox and the Start Quiz button
-col1, col2 = st.columns([2, 1])  # Adjust the ratio for layout balance
+# Create a row with the user name textbox and the Start Quiz button aligned properly
+col1, col2 = st.columns([4, 1])  # Adjust the ratio for layout balance
 with col1:
     name = st.text_input("Enter your name", st.session_state.name)
 with col2:
+    st.write("")  # Add an empty line to adjust vertical alignment
     if st.button("Start Quiz") and not st.session_state.quiz_started:
         if name:
             st.session_state.quiz_started = True
@@ -89,11 +90,12 @@ if st.session_state.quiz_started:
     if st.session_state.show_next:
         st.subheader(st.session_state.question)
 
-        # Create a row with the answer input and the Submit button
-        col3, col4 = st.columns([2, 1])  # Adjust the ratio for layout balance
+        # Create a row with the answer input and the Submit button aligned properly
+        col3, col4 = st.columns([4, 1])  # Adjust the ratio for alignment
         with col3:
             user_answer = st.text_input("Your Answer", key="user_answer_input")
         with col4:
+            st.write("")  # Add an empty line to align the button
             if st.button("Submit"):
                 if user_answer:
                     result, st.session_state.score, st.session_state.trials = quiz_function(
