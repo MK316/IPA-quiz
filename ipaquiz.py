@@ -4,7 +4,7 @@ import streamlit as st
 
 # Load the CSV data synchronously for simplicity in Streamlit
 def load_data():
-    url = "IPA.csv"
+    url = "IPA.csv"  # Make sure this is the correct path or URL for your file
     try:
         data = pd.read_csv(url, encoding='utf-8')
         if 'IPA' not in data.columns:
@@ -84,7 +84,7 @@ if st.session_state.quiz_started:
     st.subheader(st.session_state.question)
 
     # User input for the answer
-    user_answer = st.text_input("Your Answer", key="user_answer")
+    user_answer = st.text_input("Your Answer", key="user_answer_input")
 
     # Submit button
     if st.button("Submit"):
@@ -101,16 +101,15 @@ if st.session_state.quiz_started:
 
     # Show next question button only if a question was just answered
     if st.session_state.show_next:
-        next_question = st.button("Show Next Symbol")
-        if next_question:
+        if st.button("Show Next Symbol"):
             try:
                 question, answer, used_ipa_symbols = generate_question(st.session_state.used_ipa_symbols)
                 st.session_state.current_answer = answer
                 st.session_state.used_ipa_symbols = used_ipa_symbols
                 st.session_state.question = question
                 st.session_state.show_next = False  # Reset the flag
-                # Clear the user answer field by resetting key
-                st.session_state['user_answer'] = ""  # Clear user input field for the next question
+                # Clear the user input field for the next question by rerunning the app state
+                st.experimental_rerun()
             except Exception as e:
                 st.error(f"Error: {e}")
 
