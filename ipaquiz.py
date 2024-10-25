@@ -46,6 +46,7 @@ def quiz_function(user_answer, correct_answer, score, trials):
     else:
         result = f"Wrong! The correct answer was '{correct_answer}'."
     trials += 1
+    result += f" Your total score is {score}/{trials}."
     return result, score, trials
 
 # Initialize session state if it doesn't exist
@@ -93,31 +94,14 @@ if st.session_state.show_next:
     # User input for the answer
     user_answer = st.text_input("Your Answer", key="answer_input")
 
-    # Display Submit and Quit buttons in the same row
-    col1, col2 = st.columns([1, 1])
-    
-    with col1:
-        if st.button("Submit Answer"):
-            if user_answer:
-                # Check the answer
-                result, st.session_state.score, st.session_state.trials = quiz_function(
-                    user_answer, st.session_state.current_answer, st.session_state.score, st.session_state.trials
-                )
-                st.success(result)
-                st.session_state.show_next = False  # Reset to allow showing a new IPA
-            else:
-                st.error("Please enter an answer before submitting.")
-    
-    with col2:
-        if st.button("Quit"):
-            if name:
-                st.success(f"Quiz ended. Well done, {st.session_state.name}! Your total score: {st.session_state.score}/{st.session_state.trials} points.")
-                # Reset the session state to allow restarting the quiz
-                st.session_state.score = 0
-                st.session_state.trials = 0
-                st.session_state.used_ipa_symbols = []
-                st.session_state.current_answer = ""
-                st.session_state.name = ""
-                st.session_state.question = ""
-                st.session_state.quiz_started = False
-                st.session_state.show_next = False
+    # Display Submit button
+    if st.button("Submit Answer"):
+        if user_answer:
+            # Check the answer
+            result, st.session_state.score, st.session_state.trials = quiz_function(
+                user_answer, st.session_state.current_answer, st.session_state.score, st.session_state.trials
+            )
+            st.success(result)
+            st.session_state.show_next = False  # Reset to allow showing a new IPA
+        else:
+            st.error("Please enter an answer before submitting.")
