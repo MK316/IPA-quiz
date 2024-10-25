@@ -77,6 +77,9 @@ if st.button("Start Quiz") and not st.session_state.quiz_started:
     else:
         st.error("Please enter your name to start the quiz.")
 
+# Add a horizontal line between 'Start Quiz' and 'Show an IPA'
+st.markdown("<hr>", unsafe_allow_html=True)
+
 # Always show the "Show an IPA" button once the quiz has started
 if st.session_state.quiz_started:
     if st.button("Show an IPA"):
