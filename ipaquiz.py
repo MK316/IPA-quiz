@@ -103,13 +103,16 @@ if st.session_state.quiz_started:
     if st.session_state.show_next:
         if st.button("Show Next Symbol"):
             try:
+                # Generate the next question and clear input
                 question, answer, used_ipa_symbols = generate_question(st.session_state.used_ipa_symbols)
                 st.session_state.current_answer = answer
                 st.session_state.used_ipa_symbols = used_ipa_symbols
                 st.session_state.question = question
                 st.session_state.show_next = False  # Reset the flag
-                # Clear the user input field for the next question by rerunning the app state
-                st.experimental_rerun()
+
+                # Simulate clearing the user input by resetting the input field
+                st.text_input("Your Answer", key="user_answer_input", value="", on_change=None)
+
             except Exception as e:
                 st.error(f"Error: {e}")
 
