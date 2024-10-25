@@ -68,58 +68,48 @@ if name:
 # Start quiz button
 if st.button("Start Quiz") and not st.session_state.quiz_started:
     if name:
-        try:
-            question, answer, used_ipa_symbols = generate_question(st.session_state.used_ipa_symbols)
-            st.session_state.current_answer = answer
-            st.session_state.used_ipa_symbols = used_ipa_symbols
-            st.session_state.question = question
-            st.session_state.quiz_started = True
-        except Exception as e:
-            st.error(f"Error: {e}")
+        st.session_state.quiz_started = True
+        st.session_state.score = 0
+        st.session_state.trials = 0
+        st.session_state.used_ipa_symbols = []
+        st.success(f"Hello {name}, let's begin!")
     else:
         st.error("Please enter your name to start the quiz.")
 
-# Display the question if the quiz has started
-if st.session_state.quiz_started:
+# Show an IPA button
+if st.session_state.quiz_started and not st.session_state.show_next:
+    if st.button("Show an IPA"):
+        # Generate the next question
+        question, answer, used_ipa_symbols = generate_question(st.session_state.used_ipa_symbols)
+        st.session_state.current_answer = answer
+        st.session_state.used_ipa_symbols = used_ipa_symbols
+        st.session_state.question = question
+        st.session_state.show_next = True
+
+# Display the question and allow the user to answer
+if st.session_state.show_next:
     st.subheader(st.session_state.question)
 
     # User input for the answer
-    user_answer = st.text_input("Your Answer", key="user_answer_input")
+    user_answer = st.text_input("Your Answer", key="answer_input")
 
     # Submit button
-    if st.button("Submit"):
+    if st.button("Submit Answer"):
         if user_answer:
             # Check the answer
             result, st.session_state.score, st.session_state.trials = quiz_function(
                 user_answer, st.session_state.current_answer, st.session_state.score, st.session_state.trials
             )
             st.success(result)
-            st.session_state.show_next = True  # Allow showing the next question
-            
+            st.session_state.show_next = False  # Hide the question until the user requests a new one
         else:
             st.error("Please enter an answer before submitting.")
 
-    # Show next question button only if a question was just answered
-    if st.session_state.show_next:
-        if st.button("Show Next Symbol"):
-            try:
-                # Generate the next question and clear input
-                question, answer, used_ipa_symbols = generate_question(st.session_state.used_ipa_symbols)
-                st.session_state.current_answer = answer
-                st.session_state.used_ipa_symbols = used_ipa_symbols
-                st.session_state.question = question
-                st.session_state.show_next = False  # Reset the flag
-
-                # Simulate clearing the user input by resetting the input field
-                st.text_input("Your Answer", key="user_answer_input", value="", on_change=None)
-
-            except Exception as e:
-                st.error(f"Error: {e}")
-
-    # Quit button
-    if st.button("Quit"):
+# Quit button to end the quiz and display score
+if st.button("Quit"):
+    if name:
         st.success(f"Quiz ended. Well done, {st.session_state.name}! Your total score: {st.session_state.score}/{st.session_state.trials} points.")
-        # Reset the session state
+        # Reset the session state to allow restarting the quiz
         st.session_state.score = 0
         st.session_state.trials = 0
         st.session_state.used_ipa_symbols = []
