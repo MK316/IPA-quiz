@@ -57,7 +57,7 @@ if 'score' not in st.session_state:
     st.session_state.name = ""
     st.session_state.question = ""
     st.session_state.quiz_started = False
-    st.session_state.show_next = False  # New flag to handle showing next question
+    st.session_state.show_next = False  # Flag to handle showing next question
 
 # Get user name
 st.title("IPA Quiz")
@@ -76,8 +76,8 @@ if st.button("Start Quiz") and not st.session_state.quiz_started:
     else:
         st.error("Please enter your name to start the quiz.")
 
-# Show an IPA button
-if st.session_state.quiz_started and not st.session_state.show_next:
+# Always show the "Show an IPA" button once the quiz has started
+if st.session_state.quiz_started:
     if st.button("Show an IPA"):
         # Generate the next question
         question, answer, used_ipa_symbols = generate_question(st.session_state.used_ipa_symbols)
@@ -101,7 +101,7 @@ if st.session_state.show_next:
                 user_answer, st.session_state.current_answer, st.session_state.score, st.session_state.trials
             )
             st.success(result)
-            st.session_state.show_next = False  # Hide the question until the user requests a new one
+            st.session_state.show_next = False  # Reset to allow showing a new IPA
         else:
             st.error("Please enter an answer before submitting.")
 
